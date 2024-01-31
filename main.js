@@ -1,4 +1,4 @@
-import './style.css';
+import "./style.css";
 import { Questions } from "./questions";
 
 console.log(Questions);
@@ -6,7 +6,7 @@ console.log(Questions);
 const app = document.querySelector("#app");
 
 const startButton = document.querySelector("#start");
-startButton.addEventListener("click", startQuiz)
+startButton.addEventListener("click", startQuiz);
 
 function startQuiz(event) {
   event.stopPropagation();
@@ -17,9 +17,9 @@ function startQuiz(event) {
   displayQuestion(currentQuestion);
 
   function clean() {
-  while (app.firstElementChild) {
-    app.firstElementChild.remove();
-  }
+    while (app.firstElementChild) {
+      app.firstElementChild.remove();
+    }
   }
 
   function displayQuestion(index) {
@@ -31,11 +31,19 @@ function startQuiz(event) {
 
     const title = getTitleElement(question.question);
     app.appendChild(title);
+    const answersDiv = createAnswers(question.answers); 
+    app.appendChild(answersDiv);
   }
 
   function createAnswers(answers) {
     const answersDiv = document.createElement("div");
     answersDiv.classList.add("answers");
+
+    for (const answer of answers) {
+      const label = getAnswerElement(answer);
+      answersDiv.appendChild(label);
+    }
+    return answersDiv;
   }
 }
 
@@ -45,3 +53,17 @@ function getTitleElement(text) {
   return title;
 }
 
+function getAnswerElement(text) {
+  const label = document.createElement("label");
+  label.innerText = text;
+  const input = document.createElement("input");
+  const id = text.replaceAll(" ", "-").toLowerCase();
+  input.id = id;
+  label.htmlFor = id;
+  input.setAttribute("type", "radio");
+  input.setAttribute("name", "answer");
+  input.setAttribute("value", text);
+  label.appendChild(input);
+
+  return label;
+}
