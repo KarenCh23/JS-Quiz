@@ -35,7 +35,16 @@ function startQuiz(event) {
     app.appendChild(answersDiv);
 
     const submitButton = getSubmitButton();
+    submitButton.addEventListener("click", submit);
     app.appendChild(submitButton);
+  }
+
+  function submit() {
+    // Handle submit for answers
+    const selectedAnswer = app.querySelector('input[name="answer"]:checked');
+    const value = selectedAnswer.value;
+    // test for getting answer value
+    alert(`Submit ${value}`)
   }
 
   function createAnswers(answers) {
