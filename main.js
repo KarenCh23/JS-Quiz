@@ -31,8 +31,11 @@ function startQuiz(event) {
 
     const title = getTitleElement(question.question);
     app.appendChild(title);
-    const answersDiv = createAnswers(question.answers); 
+    const answersDiv = createAnswers(question.answers);
     app.appendChild(answersDiv);
+
+    const submitButton = getSubmitButton();
+    app.appendChild(submitButton);
   }
 
   function createAnswers(answers) {
@@ -66,4 +69,10 @@ function getAnswerElement(text) {
   label.appendChild(input);
 
   return label;
+}
+
+function getSubmitButton() {
+  const submitButton = document.createElement("button");
+  submitButton.innerText = "Submit";
+  return submitButton;
 }
