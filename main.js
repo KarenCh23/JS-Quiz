@@ -6,17 +6,42 @@ console.log(Questions);
 const app = document.querySelector("#app");
 
 const startButton = document.querySelector("#start");
+startButton.addEventListener("click", startQuiz)
 
-let i = 0;
+function startQuiz(event) {
+  event.stopPropagation();
+  let currentQuestion = 0;
+  let score = 0;
 
-startButton.addEventListener("click", () => {
- const question = document.querySelector("#question") ?? document.createElement("p")
- question.id = "question";
- question.innerText = Questions[i].question;
- app.insertBefore(question, startButton);
+  clean();
+  displayQuestion(currentQuestion);
 
- i++;
- if(i > Questions.length - 1) {
-  i = 0;
- }
-});
+  function clean() {
+  while (app.firstElementChild) {
+    app.firstElementChild.remove();
+  }
+  }
+
+  function displayQuestion(index) {
+    const question = Questions[index];
+
+    if (!question) {
+      // Finish quiz
+    }
+
+    const title = getTitleElement(question.question);
+    app.appendChild(title);
+  }
+
+  function createAnswers(answers) {
+    const answersDiv = document.createElement("div");
+    answersDiv.classList.add("answers");
+  }
+}
+
+function getTitleElement(text) {
+  const title = document.createElement("h3");
+  title.innerText = text;
+  return title;
+}
+
