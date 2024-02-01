@@ -11,7 +11,6 @@ function startQuiz(event) {
   let currentQuestion = 0;
   let score = 0;
 
-
   displayQuestion(currentQuestion);
 
   function clean() {
@@ -26,6 +25,8 @@ function startQuiz(event) {
 
     if (!question) {
       // Finish quiz
+      displayFinishMessage();
+      return;
     }
 
     const title = getTitleElement(question.question);
@@ -38,8 +39,19 @@ function startQuiz(event) {
     app.appendChild(submitButton);
   }
 
+  //  Show Quiz ending Message
+  function displayFinishMessage() {
+    const h1 = document.createElement("h1");
+    const p = document.createElement("p");
+
+    h1.innerText = "Bravo, tu as terminé le quiz !";
+    p.innerText = `Tu as eu ${score} sur ${Questions.length} point`;
+    app.appendChild(h1);
+    app.appendChild(p);
+  }
+
+  // Handle submit for answers
   function submit() {
-    // Handle submit for answers
     const selectedAnswer = app.querySelector('input[name="answer"]:checked');
     const value = selectedAnswer.value;
     const question = Questions[currentQuestion];
@@ -52,7 +64,7 @@ function startQuiz(event) {
     const feedback = feedBackMessage(isCorrect, question.correct);
     app.appendChild(feedback);
 
-    // Show the next question 
+    // Show the next question
     setTimeout(() => {
       currentQuestion++;
       displayQuestion(currentQuestion);
