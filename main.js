@@ -41,8 +41,34 @@ function startQuiz(event) {
     // Handle submit for answers
     const selectedAnswer = app.querySelector('input[name="answer"]:checked');
     const value = selectedAnswer.value;
+    const question = Questions[currentQuestion];
+    const isCorrect = question.correct === value;
+
+    if (isCorrect) {
+      score++;
+    }
+    showFeedBack(isCorrect, question.correct, value);
     // test for getting answer value
-    alert(`Submit ${value}`)
+    // alert(`Submit ${isCorrect ? "Correct" : "Incorrect"}`);
+  }
+
+  // Score Handler 
+  function showFeedBack(isCorrect, correct, answer) {
+    const correctAnswerId = formatId(correct)
+    const correctElement = document.querySelector(`label[for="${correctAnswerId}"]`)
+
+    const selectedAnswerId = formatId(answer)
+    const selectedElement = document.querySelector(`label[for="${selectedAnswerId}"]`)
+
+    if (isCorrect) {
+      selectedElement.classList.add("correct");
+    } else {
+      selectedElement.classList.add("incorrect");
+      correctElement.classList.add("correct");
+    }
+
+
+
   }
 
   function createAnswers(answers) {
@@ -63,11 +89,16 @@ function getTitleElement(text) {
   return title;
 }
 
+// Id format Handler
+function formatId(text) {
+  return text.replaceAll(" ", "-").toLowerCase();
+}
+
 function getAnswerElement(text) {
   const label = document.createElement("label");
   label.innerText = text;
   const input = document.createElement("input");
-  const id = text.replaceAll(" ", "-").toLowerCase();
+  const id = formatId(text);
   input.id = id;
   label.htmlFor = id;
   input.setAttribute("type", "radio");
