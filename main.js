@@ -90,10 +90,9 @@ function getTitleElement(text) {
   title.innerText = text;
   return title;
 }
-
-// Id format Handler
+// Format ID Handler 
 function formatId(text) {
-  return text.replaceAll(" ", "-").toLowerCase();
+  return text.replaceAll(" ", "-").replaceAll('"', "'").toLowerCase();
 }
 
 function getAnswerElement(text) {
