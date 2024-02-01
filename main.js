@@ -52,25 +52,6 @@ function startQuiz(event) {
     // alert(`Submit ${isCorrect ? "Correct" : "Incorrect"}`);
   }
 
-  // Score Handler 
-  function showFeedBack(isCorrect, correct, answer) {
-    const correctAnswerId = formatId(correct)
-    const correctElement = document.querySelector(`label[for="${correctAnswerId}"]`)
-
-    const selectedAnswerId = formatId(answer)
-    const selectedElement = document.querySelector(`label[for="${selectedAnswerId}"]`)
-
-    if (isCorrect) {
-      selectedElement.classList.add("correct");
-    } else {
-      selectedElement.classList.add("incorrect");
-      correctElement.classList.add("correct");
-    }
-
-
-
-  }
-
   function createAnswers(answers) {
     const answersDiv = document.createElement("div");
     answersDiv.classList.add("answers");
@@ -113,4 +94,20 @@ function getSubmitButton() {
   const submitButton = document.createElement("button");
   submitButton.innerText = "Submit";
   return submitButton;
+}
+
+// Score Handler
+function showFeedBack(isCorrect, correct, answer) {
+  const correctAnswerId = formatId(correct);
+  const correctElement = document.querySelector(
+    `label[for="${correctAnswerId}"]`
+  );
+
+  const selectedAnswerId = formatId(answer);
+  const selectedElement = document.querySelector(
+    `label[for="${selectedAnswerId}"]`
+  );
+
+  correctElement.classList.add("correct");
+  selectedElement.classList.add(isCorrect ? "correct" : "incorrect");
 }
