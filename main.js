@@ -17,6 +17,8 @@ function startQuiz(event) {
     while (app.firstElementChild) {
       app.firstElementChild.remove();
     }
+    const progress = getProgressBar(Questions.length, currentQuestion);
+    app.appendChild(progress);
   }
 
   function displayQuestion(index) {
@@ -139,4 +141,12 @@ function feedBackMessage(isCorrect, correct) {
     : `Désolé...mais la bonne réponse était ${correct}`;
 
   return paragraph;
+}
+
+ // Progress Bar 
+ function getProgressBar(max, value) {
+  const progress = document.createElement("progress");
+  progress.setAttribute("max", max);
+  progress.setAttribute("value", value);
+  return progress;
 }
