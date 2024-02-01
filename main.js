@@ -11,7 +11,6 @@ function startQuiz(event) {
   let currentQuestion = 0;
   let score = 0;
 
-  clean();
   displayQuestion(currentQuestion);
 
   function clean() {
@@ -21,10 +20,13 @@ function startQuiz(event) {
   }
 
   function displayQuestion(index) {
+    clean();
     const question = Questions[index];
 
     if (!question) {
       // Finish quiz
+      displayFinishMessage();
+      return;
     }
 
     const title = getTitleElement(question.question);
@@ -37,12 +39,36 @@ function startQuiz(event) {
     app.appendChild(submitButton);
   }
 
+  //  Show Quiz ending Message
+  function displayFinishMessage() {
+    const h1 = document.createElement("h1");
+    const p = document.createElement("p");
+
+    h1.innerText = "Bravo, tu as terminé le quiz !";
+    p.innerText = `Tu as eu ${score} sur ${Questions.length} point`;
+    app.appendChild(h1);
+    app.appendChild(p);
+  }
+
+  // Handle submit for answers
   function submit() {
-    // Handle submit for answers
     const selectedAnswer = app.querySelector('input[name="answer"]:checked');
     const value = selectedAnswer.value;
-    // test for getting answer value
-    alert(`Submit ${value}`)
+    const question = Questions[currentQuestion];
+    const isCorrect = question.correct === value;
+
+    if (isCorrect) {
+      score++;
+    }
+    showFeedBack(isCorrect, question.correct, value);
+    const feedback = feedBackMessage(isCorrect, question.correct);
+    app.appendChild(feedback);
+
+    // Show the next question
+    setTimeout(() => {
+      currentQuestion++;
+      displayQuestion(currentQuestion);
+    }, 4000);
   }
 
   function createAnswers(answers) {
@@ -63,11 +89,16 @@ function getTitleElement(text) {
   return title;
 }
 
+// Id format Handler
+function formatId(text) {
+  return text.replaceAll(" ", "-").toLowerCase();
+}
+
 function getAnswerElement(text) {
   const label = document.createElement("label");
   label.innerText = text;
   const input = document.createElement("input");
-  const id = text.replaceAll(" ", "-").toLowerCase();
+  const id = formatId(text);
   input.id = id;
   label.htmlFor = id;
   input.setAttribute("type", "radio");
@@ -82,4 +113,30 @@ function getSubmitButton() {
   const submitButton = document.createElement("button");
   submitButton.innerText = "Submit";
   return submitButton;
+}
+
+// Score Handler
+function showFeedBack(isCorrect, correct, answer) {
+  const correctAnswerId = formatId(correct);
+  const correctElement = document.querySelector(
+    `label[for="${correctAnswerId}"]`
+  );
+
+  const selectedAnswerId = formatId(answer);
+  const selectedElement = document.querySelector(
+    `label[for="${selectedAnswerId}"]`
+  );
+
+  correctElement.classList.add("correct");
+  selectedElement.classList.add(isCorrect ? "correct" : "incorrect");
+}
+
+// Success Message after submit
+function feedBackMessage(isCorrect, correct) {
+  const paragraph = document.createElement("p");
+  paragraph.innerText = isCorrect
+    ? "Bravo ! Tu as la bonne réponse"
+    : `Désolé...mais la bonne réponse était ${correct}`;
+
+  return paragraph;
 }
