@@ -11,7 +11,7 @@ function startQuiz(event) {
   let currentQuestion = 0;
   let score = 0;
 
-  clean();
+
   displayQuestion(currentQuestion);
 
   function clean() {
@@ -21,6 +21,7 @@ function startQuiz(event) {
   }
 
   function displayQuestion(index) {
+    clean();
     const question = Questions[index];
 
     if (!question) {
@@ -48,8 +49,14 @@ function startQuiz(event) {
       score++;
     }
     showFeedBack(isCorrect, question.correct, value);
-    // test for getting answer value
-    // alert(`Submit ${isCorrect ? "Correct" : "Incorrect"}`);
+    const feedback = feedBackMessage(isCorrect, question.correct);
+    app.appendChild(feedback);
+
+    // Show the next question 
+    setTimeout(() => {
+      currentQuestion++;
+      displayQuestion(currentQuestion);
+    }, 4000);
   }
 
   function createAnswers(answers) {
@@ -110,4 +117,14 @@ function showFeedBack(isCorrect, correct, answer) {
 
   correctElement.classList.add("correct");
   selectedElement.classList.add(isCorrect ? "correct" : "incorrect");
+}
+
+// Success Message after submit
+function feedBackMessage(isCorrect, correct) {
+  const paragraph = document.createElement("p");
+  paragraph.innerText = isCorrect
+    ? "Bravo ! Tu as la bonne réponse"
+    : `Désolé...mais la bonne réponse était ${correct}`;
+
+  return paragraph;
 }
