@@ -2,10 +2,11 @@ import "./style.css";
 import { Questions } from "./questions";
 
 const app = document.querySelector("#app");
-
+const TIMEOUT = 4000;
 const startButton = document.querySelector("#start");
 startButton.addEventListener("click", startQuiz);
 
+// Sart the quiz on click event on start button
 function startQuiz(event) {
   event.stopPropagation();
   let currentQuestion = 0;
@@ -26,7 +27,7 @@ function startQuiz(event) {
     const question = Questions[index];
 
     if (!question) {
-      // Finish quiz
+      // Finish the quiz
       displayFinishMessage();
       return;
     }
@@ -63,35 +64,44 @@ function startQuiz(event) {
       score++;
     }
     showFeedBack(isCorrect, question.correct, value);
+    displayNextQuestionButton(() => {
+      currentQuestion++;
+      displayQuestion(currentQuestion);
+    });
     const feedback = feedBackMessage(isCorrect, question.correct);
     app.appendChild(feedback);
-
-    displayNextQuestion();
   }
 
   // Show the next question button
-  function displayNextQuestion() {
-    const timeOut = 4000;
-    let remainingTimeOut = timeOut;
-    let interval;
-   
-    // Change start button to next question button with timeOut in seconds
+  function displayNextQuestionButton(callback) {
+    let remainingTimeout = TIMEOUT;
+
     app.querySelector("button").remove();
+
+    const getButtonText = () => `Next (${remainingTimeout / 1000}s)`;
+
     const nextButton = document.createElement("button");
-    nextButton.innerText = `Next (${remainingTimeOut / 1000}s)`;
+    nextButton.innerText = getButtonText();
     app.appendChild(nextButton);
 
-    interval = setInterval(() => {
-      remainingTimeOut -= 1000;
-      nextButton.innerText = `Next (${remainingTimeOut / 1000}s)`;
+    const interval = setInterval(() => {
+      remainingTimeout -= 1000;
+      nextButton.innerText = getButtonText();
     }, 1000);
 
-    setTimeout(() => {
-      currentQuestion++;
-      clearInterval(interval);
-      displayQuestion(currentQuestion);
-    }, timeOut);
+    const timeout = setTimeout(() => {
+      handleNextQuestion();
+    }, TIMEOUT);
 
+    const handleNextQuestion = () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+      callback();
+    };
+
+    nextButton.addEventListener("click", () => {
+      handleNextQuestion();
+    });
   }
 
   function createAnswers(answers) {
