@@ -66,11 +66,32 @@ function startQuiz(event) {
     const feedback = feedBackMessage(isCorrect, question.correct);
     app.appendChild(feedback);
 
-    // Show the next question
+    displayNextQuestion();
+  }
+
+  // Show the next question button
+  function displayNextQuestion() {
+    const timeOut = 4000;
+    let remainingTimeOut = timeOut;
+    let interval;
+   
+    // Change start button to next question button with timeOut in seconds
+    app.querySelector("button").remove();
+    const nextButton = document.createElement("button");
+    nextButton.innerText = `Next (${remainingTimeOut / 1000}s)`;
+    app.appendChild(nextButton);
+
+    interval = setInterval(() => {
+      remainingTimeOut -= 1000;
+      nextButton.innerText = `Next (${remainingTimeOut / 1000}s)`;
+    }, 1000);
+
     setTimeout(() => {
       currentQuestion++;
+      clearInterval(interval);
       displayQuestion(currentQuestion);
-    }, 4000);
+    }, timeOut);
+
   }
 
   function createAnswers(answers) {
@@ -90,7 +111,7 @@ function getTitleElement(text) {
   title.innerText = text;
   return title;
 }
-// Format ID Handler 
+// Format ID Handler
 function formatId(text) {
   return text.replaceAll(" ", "-").replaceAll('"', "'").toLowerCase();
 }
@@ -142,8 +163,8 @@ function feedBackMessage(isCorrect, correct) {
   return paragraph;
 }
 
- // Progress Bar 
- function getProgressBar(max, value) {
+// Progress Bar
+function getProgressBar(max, value) {
   const progress = document.createElement("progress");
   progress.setAttribute("max", max);
   progress.setAttribute("value", value);
