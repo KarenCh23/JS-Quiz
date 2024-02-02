@@ -81,6 +81,10 @@ body {
   width: min(100%, 500px);
 }
 
+#quiz-title {
+  text-align: center;
+}
+
 button {
   display: inline-block;
   outline: none;
